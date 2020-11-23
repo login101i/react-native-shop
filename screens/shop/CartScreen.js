@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import Colors from '../../constants/Colors'
 import CartItem from '../../components/shop/CartItem'
 import * as cartActions from '../../store/actions/cart'
+import * as ordersActions from '../../store/actions/orders'
 
 
 
@@ -45,6 +46,7 @@ export default function CartScreen() {
                         color={Colors.primary}
                         title="zamów teraz"
                         disabled={cartItems.length === 0}
+                        onPress={ordersActions.addorder(cartItems, cartTotalAmount)}
                     />
                 </View>
 
