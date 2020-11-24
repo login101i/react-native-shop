@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { StyleSheet, Text, View, FlatList } from 'react-native'
+import { StyleSheet, Text, View, FlatList, Button } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 
 import ProductItem from '../../components/shop/ProductItem'
@@ -8,6 +8,7 @@ import * as cartActions from '../../store/actions/cart'
 import CustomHeaderButton from '../../components/shop/UI/CustomHeaderButton'
 import { HeaderButtons, Icon, Item } from 'react-navigation-header-buttons'
 import CartScreen from '../../screens/shop/CartScreen'
+import Colors from '../../constants/Colors'
 
 
 
@@ -19,10 +20,19 @@ export default function ProductsOverviewScreen(props) {
 
 
     const dispatch = useDispatch()
-    const toggleAddToCart = (itemData) => {
-        dispatch(cartActions.addToCart(itemData.item))
-    }
+    // const toggleAddToCart = (itemData) => {
+    //     dispatch(cartActions.addToCart(itemData.item))
+    // }
 
+
+    const selectItemHandler = (id, title) => {
+        props.navigation.navigate('ProductDetail',
+            {
+                productId: id,
+                productTitle: title
+            })
+
+    }
 
 
     return (
@@ -32,19 +42,32 @@ export default function ProductsOverviewScreen(props) {
                 data={products}
                 keyExtractor={(item, index) => item.id}
                 renderItem={itemData => <ProductItem
+                    showButton
                     image={itemData.item.imageUrl}
                     title={itemData.item.title}
                     price={itemData.item.price}
-                    onViewDetail={() => {
-                        props.navigation.navigate('ProductDetail',
-                            {
-                                productId: itemData.item.id,
-                                productTitle: itemData.item.title
-                            })
-
+                    onSelect={() => {
+                        selectItemHandler(itemData.item.id, itemData.item.title)
                     }}
-                    onAddToCart={() => toggleAddToCart(itemData)}
-                />}
+
+                >
+                    <Button
+                        color={Colors.primary}
+                        title="Szczegóły"
+                        onPress={() =>
+                            selectItemHandler(itemData.item.id, itemData.item.title)
+                        }
+                    />
+                    <Text>Hello</Text>
+
+                    <Button
+                        color={Colors.primary}
+                        title="Do koszyka"
+                        onPress={() => dispatch(cartActions.addToCart(itemData.item))
+                        }
+                    />
+
+                </ProductItem>}
             />
         </View>
     )
@@ -54,12 +77,12 @@ ProductsOverviewScreen.navigationOptions = navData => {
 
     return {
         headerTitle: 'Wszystkie produkty',
-        headerLeft:(
+        headerLeft: (
             <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
                 <Item
                     title="Menu"
                     iconName="md-menu"
-                    onPress={() => { navData.navigation.toggleDrawer()}}
+                    onPress={() => { navData.navigation.toggleDrawer() }}
                 />
             </HeaderButtons>
         ),
@@ -68,7 +91,7 @@ ProductsOverviewScreen.navigationOptions = navData => {
                 <Item
                     title="Cart"
                     iconName="md-cart"
-                    onPress={() => {navData.navigation.navigate('Cart')}}
+                    onPress={() => { navData.navigation.navigate('Cart') }}
                 />
             </HeaderButtons>
         )

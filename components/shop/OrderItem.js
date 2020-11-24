@@ -3,12 +3,13 @@ import { StyleSheet, Text, View, Button, TouchableNativeFeedback } from 'react-n
 import Colors from '../../constants/Colors'
 
 import CartItem from './CartItem'
+import Card from './UI/Card'
 
 export default function OrderItem(props) {
     const [showDetails, setShowDetails] = useState(false)
     return (
         <>
-            <View style={styles.order}>
+            <Card style={styles.order}>
                 <View style={styles.summary}>
                     <Text style={styles.totalAmount}>{props.amount.toFixed(2)} zł</Text>
                     <Text style={styles.date}>{props.date}</Text>
@@ -32,7 +33,7 @@ export default function OrderItem(props) {
                 }
 
 
-            </View>
+            </Card>
 
         </>
     )
@@ -43,17 +44,7 @@ const styles = StyleSheet.create({
     order: {
         alignItems: 'center',
         justifyContent: 'space-between',
-
-        marginBottom: 10,
-        shadowColor: 'black',
-        shadowOpacity: 0.3,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 8,
-        margin: 20,
         padding: 14,
-        elevation: 5,
-        borderRadius: 3,
-        backgroundColor:'white'
     },
     summary: {
         flexDirection: 'row',

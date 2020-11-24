@@ -40,11 +40,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginHorizontal: 20,
+        alignItems:'center',
+        marginHorizontal: 5,
+        marginBottom:25,
         marginVertical: 5,
         alignItems:'center',
         borderBottomColor: 'grey',
-        borderBottomWidth: 1
+        borderBottomWidth: 1,
+
 
 
 
@@ -73,7 +76,8 @@ const styles = StyleSheet.create({
         marginHorizontal: 22
     },
     razem: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems:'flex-end'
     }
 
 

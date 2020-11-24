@@ -6,6 +6,8 @@ import CartItem from '../../components/shop/CartItem'
 import * as cartActions from '../../store/actions/cart'
 import * as ordersActions from '../../store/actions/orders'
 
+import Card from '../../components/shop/UI/Card'
+
 
 
 
@@ -41,7 +43,7 @@ export default function CartScreen() {
     return (
         <>
             <View style={styles.screen}>
-                <View style={styles.summary}>
+                <Card style={styles.summary}>
                     <Text style={styles.summaryText}>Razem</Text><Text style={styles.amount}>{cartTotalAmount.toFixed(2)}zł</Text>
                     <Button
                         color={Colors.primary}
@@ -51,7 +53,7 @@ export default function CartScreen() {
                             dispatch(ordersActions.addOrder(cartItems, cartTotalAmount))
                         }}
                     />
-                </View>
+                </Card>
 
 
                 <FlatList
@@ -99,18 +101,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        // borderWidth:2,
-        // borderColor:'red',
-
-        marginBottom: 10,
-        shadowColor: 'black',
-        shadowOpacity: 0.3,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 8,
-
         padding: 14,
-        elevation: 5,
-        borderRadius: 3,
+    
     },
     summaryText: {
         fontFamily: 'open-sans-bold',

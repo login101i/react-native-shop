@@ -13,6 +13,9 @@ import CartScreen from '../screens/shop/CartScreen'
 import Colors from '../constants/Colors'
 import Orders from '../screens/shop/OrdersScreen'
 import OrdersScreen from '../screens/shop/OrdersScreen'
+import UserProductsScreen from '../screens/user/UserProductsScreen'
+import EditProductScreen from '../screens/user/EditProductScreen'
+
 
 
 
@@ -62,19 +65,43 @@ const OrdersNavigator = createStackNavigator({
 })
 // __________________________________________
 
+
+const AdminNavigator = createStackNavigator({
+    UserProducts: UserProductsScreen,
+    EditProduct: EditProductScreen
+}, {
+    navigationOptions: {
+        drawerIcon: drawerConfig => <Ionicons
+            name='md-create'
+            size={23}
+            color={drawerConfig.tintColor}
+        />
+    },
+    defaultNavigationOptions: defaultOptions
+})
+
+// __________________________________________
+
+
 const ShopNavigator = createDrawerNavigator({
-    Products:{
+    Products: {
         screen: ProductsNavigator,
-        navigationOptions:{
-            drawerLabel:"Produkty"
+        navigationOptions: {
+            drawerLabel: "Produkty"
         }
-    } ,
+    },
     Order: {
-        screen:OrdersNavigator,
-        navigationOptions:{
-            drawerLabel:"Twoje zamówienie"
+        screen: OrdersNavigator,
+        navigationOptions: {
+            drawerLabel: "Twoje zamówienie"
         }
-    } 
+    },
+    Admin: {
+        screen: AdminNavigator,
+        navigationOptions: {
+            drawerLabel: "Admin"
+        }
+    }
 }, {
     contentOptions: {
         activeTintColor: "green"
