@@ -6,27 +6,27 @@ export default function CartItem(props) {
     return (
         <View style={styles.cardItem}>
             <Text style={styles.item}>
-                <Text style={styles.quantity}>{props.qty}</Text>
+                <Text style={styles.quantity}>{props.qty}x</Text>
                 <Text style={styles.mainText}
                     numberOfLines={1}
                 > {props.title}</Text>
             </Text>
             <View style={styles.razem}>
                 <Text style={styles.mainText}>  {props.amount.toFixed(2)}  </Text>
-                <TouchableOpacity onPress={props.onRemove} style={styles.deleteButton}>
+                {props.showIcon &&<TouchableOpacity onPress={props.onRemove} style={styles.deleteButton}>
                     <Ionicons
                         name="md-trash"
                         size={23}
                         color='red'
                     />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={props.onAddOne}>
+                </TouchableOpacity>}
+                {props.showIcon && <TouchableOpacity onPress={props.onAddOne}>
                     <Ionicons
                         name="md-add"
                         size={23}
                         color='blue'
                     />
-                </TouchableOpacity>
+                </TouchableOpacity>}
             </View>
         </View>
     )
@@ -42,6 +42,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginHorizontal: 20,
         marginVertical: 5,
+        alignItems:'center',
+        borderBottomColor: 'grey',
+        borderBottomWidth: 1
 
 
 
@@ -49,6 +52,9 @@ const styles = StyleSheet.create({
     item: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
+      
+
 
     },
     quantity: {

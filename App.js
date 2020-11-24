@@ -9,14 +9,15 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 
 import productReducer from './store/reducers/products'
 import ShopNavigator from './navigation/ShopNavigator'
+import ordersReducer from './store/reducers/orders'
+
 import cartReducer from './store/reducers/cart'
-import orderReducer from './store/reducers/orders'
 
 
 const rootReducer = combineReducers({
   products: productReducer,
   cart:cartReducer,
-  orders:orderReducer
+  orders:ordersReducer
 })
 const store = createStore(rootReducer)
 

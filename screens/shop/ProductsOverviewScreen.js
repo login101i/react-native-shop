@@ -57,7 +57,7 @@ ProductsOverviewScreen.navigationOptions = navData => {
         headerLeft:(
             <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
                 <Item
-                    title="Cart"
+                    title="Menu"
                     iconName="md-menu"
                     onPress={() => { navData.navigation.toggleDrawer()}}
                 />

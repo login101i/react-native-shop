@@ -28,12 +28,13 @@ export default function CartScreen() {
 
     })
     console.log(cartItems)
+    console.log(cartTotalAmount)
 
     const dispatch = useDispatch()
     const toggleDeleteItem = (itemData) => {
         dispatch(cartActions.removeFromCart(itemData.item.productId))
     }
-    const toggleAddOneItem=(itemData)=>{
+    const toggleAddOneItem = (itemData) => {
         dispatch(cartActions.addOne(itemData.item.productId))
     }
 
@@ -46,7 +47,9 @@ export default function CartScreen() {
                         color={Colors.primary}
                         title="zamów teraz"
                         disabled={cartItems.length === 0}
-                        onPress={ordersActions.addorder(cartItems, cartTotalAmount)}
+                        onPress={() => {
+                            dispatch(ordersActions.addOrder(cartItems, cartTotalAmount))
+                        }}
                     />
                 </View>
 
@@ -56,16 +59,21 @@ export default function CartScreen() {
                     keyExtractor={item => item.productId}
                     renderItem={itemData => (
                         <CartItem
+                            showIcon
                             qty={itemData.item.quantity}
                             title={itemData.item.productTitle}
                             amount={itemData.item.sum}
                             onRemove={() => toggleDeleteItem(itemData)}
-                            onAddOne={()=>toggleAddOneItem(itemData)}
+                            onAddOne={() => toggleAddOneItem(itemData)}
                         />
                     )
                     }
                 />
+                <Button title="wyczyść koszyk"
+                onPress={()=>dispatch(cartActions.clearCart())}
+                />
             </View>
+
         </>
     )
 }
@@ -73,7 +81,7 @@ export default function CartScreen() {
 CartScreen.navigationOptions = navData => {
 
     return {
-        headerTitle: 'Koszyk',
+        headerTitle: 'Twój Koszyk',
 
     }
 }

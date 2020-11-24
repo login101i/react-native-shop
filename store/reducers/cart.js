@@ -1,14 +1,12 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, ADD_ONE } from "../actions/cart"
+import { ADD_TO_CART, REMOVE_FROM_CART, ADD_ONE, CLEAR_CART } from "../actions/cart"
 import CartItem from '../../models/cartItem'
-
-
+import { ADD_ORDER } from "../actions/orders";
 
 const initialState = {
     items: [],
     totalAmount: 0,
 
 }
-
 
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -66,18 +64,29 @@ export default (state = initialState, action) => {
             }
         case ADD_ONE:
             const itemKtoryJest = state.items[action.pid]
-            const updatedAmountofItem=new CartItem(
+            const updatedAmountofItem = new CartItem(
                 itemKtoryJest.quantity + 1,
                 itemKtoryJest.productPrice,
                 itemKtoryJest.productTitle,
                 itemKtoryJest.sum + itemKtoryJest.productPrice
             )
-            const updatedAmount ={...state.items, [action.pid]:updatedAmountofItem}
-            return{
+            const updatedAmount = { ...state.items, [action.pid]: updatedAmountofItem }
+            return {
                 ...state,
-                items:updatedAmount,
-                totalAmount:state.totalAmount+itemKtoryJest.productPrice
+                items: updatedAmount,
+                totalAmount: state.totalAmount + itemKtoryJest.productPrice
             }
+        case CLEAR_CART:
+            return {
+                ...state,
+                items:[],
+                totalAmount:0
+            }
+        case ADD_ORDER:{
+            return initialState
+
+          
+        }
 
 
     }

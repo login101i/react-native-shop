@@ -39,7 +39,7 @@ const ProductsNavigator = createStackNavigator({
 }, {
     navigationOptions: {
         drawerIcon: drawerConfig => <Ionicons
-            name='md-list'
+            name='md-cart'
             size={23}
             color={drawerConfig.tintColor}
         />
@@ -63,8 +63,18 @@ const OrdersNavigator = createStackNavigator({
 // __________________________________________
 
 const ShopNavigator = createDrawerNavigator({
-    Products: ProductsNavigator,
-    order: OrdersNavigator
+    Products:{
+        screen: ProductsNavigator,
+        navigationOptions:{
+            drawerLabel:"Produkty"
+        }
+    } ,
+    Order: {
+        screen:OrdersNavigator,
+        navigationOptions:{
+            drawerLabel:"Twoje zamówienie"
+        }
+    } 
 }, {
     contentOptions: {
         activeTintColor: "green"
