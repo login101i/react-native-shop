@@ -1,16 +1,16 @@
-// import React from 'react'
-// import { StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
 
-// export default function DefaultText(props) {
-//     return (
+export default function DefaultText(props) {
+    return (
 
-//         <Text style={styles.text}>{props.children}</Text>
+        <Text style={{...styles.text,...props.style}}>{props.children}</Text>
 
-//     )
-// }
+    )
+}
 
-// const styles = StyleSheet.create({
-//     text: {
-//         fontSize: 16,
-//     }
-// })
+const styles = StyleSheet.create({
+    text: {
+        fontSize: 16,
+    }
+})

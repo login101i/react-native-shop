@@ -95,31 +95,21 @@ export default function ProductItem(props) {
     return (
 
         <Card style={styles.product}>
-            <TouchableCmp onPress={props.onViewDetail} useForeground>
+            <TouchableCmp onPress={props.onSelect} useForeground>
                 <View>
                     <Image
                         source={{ uri: props.image }}
                         style={styles.image}
                     />
-                    <View style={styles.details}>
+                    <View style={{...styles.details,...props.style}}>
                         <Text style={styles.title}>{props.title}</Text>
-                        <Text style={styles.text}>{props.price.toFixed()}</Text>
-
+                        <Text style={styles.text}>{props.price.toFixed()} zł</Text>
                     </View>
                     <View style={styles.action}>
-                        <Button
-                            title='Szczegóły'
-                            onPress={props.onViewDetail}
-                        />
-                        <Button
-                            title='Do koszyka'
-                            onPress={props.onAddToCart}
-
-                        />
+                      {props.children}
                     </View>
                 </View>
             </TouchableCmp>
-
         </Card>
     )
 }
@@ -135,18 +125,19 @@ const styles = StyleSheet.create({
     },
     details: {
         alignItems: 'center',
-        height: '15%',
+        height: '20%',
+     
         justifyContent: 'center'
         // padding: 10
 
     },
     image: {
         width: '100%',
-        height: '70%',
+        height: '65%',
     },
     product: {
 
-        height: 300,
+        height: 330,
         overflow: 'hidden'
     },
     title: {

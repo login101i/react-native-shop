@@ -1,57 +1,76 @@
-// import React from 'react'
-// import { StyleSheet, Text, View, FlatList, Platform, Button } from 'react-native'
-// import { useSelector } from 'react-redux'
-// import { HeaderButtons, Icon, Item } from 'react-navigation-header-buttons'
-// import CustomHeaderButton from '../../components/shop/UI/CustomHeaderButton'
-// import { useDispatch } from 'react-redux'
-// import { SimpleAnimation } from 'react-native-simple-animations'
+
+import React, { useState } from 'react'
+import { StyleSheet, Text, View, FlatList } from 'react-native'
+import { useSelector } from 'react-redux'
+import CustomHeaderButton from '../../components/shop/UI/CustomHeaderButton'
+import { HeaderButtons, Item } from 'react-navigation-header-buttons'
+import OrderItem from '../../components/shop/OrderItem'
+import DefaultText from '../../components/shop/DefaultText'
 
 
-// import OrderItem from '../../components/shop/OrderItem'
+export default function OrdersScreen() {
 
-// import * as OrdersActions from '../../store/actions/orders'
+    const orders = useSelector(state => state.orders.orders)
+    if (orders.length > 22) setShowOrders(true)
 
-
-
-// export default function OrdersScreen() {
-//     const orders = useSelector(state => state.orders.orders)
-//     console.log('cardScreen')
-
-//     const dispatch = useDispatch()
-
-//     return (
-//         <>
-//             <FlatList
-//                 data={orders}
-//                 keyExtractor={item => item.id}
-//                 renderItem={itemData => <OrderItem
-//                     amount={itemData.item.totalAmount}
-//                     date={itemData.item.readableDate}
-//                     items={itemData.item.items}
-//                 />}
-//             />
-//             <Button
-//                 title="wyczyść zamówienie"
-//                 onPress={() => dispatch(OrdersActions.clearOrder())}
-//             />
-       
-//         </>
-//     )
-// }
+    if (orders.length === 0) {
+        return (
+            <View style={styles.screen}>
+                <Text style={styles.text}>Nie masz żadnych zamówień.</Text>
+            </View>
+        )
+    }
 
 
-// OrdersScreen.navigationOptions = navData => {
-//     return {
-//         headerTitle: "Twoje zamówienie",
-//         headerLeft: (
-//             <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-//                 <Item
-//                     title="Cart"
-//                     iconName="md-menu"
-//                     onPress={() => { navData.navigation.toggleDrawer() }}
-//                 />
-//             </HeaderButtons>
-//         ),
-//     }
-// }
-// const styles = StyleSheet.create({})
+    return (
+        <View >
+            <FlatList
+                data={orders}
+                keyExtractor={(item) => item.id}
+                renderItem={itemData => <OrderItem
+                    amount={itemData.item.totalAmount}
+                    items={itemData.item.items}
+                    date={itemData.item.readableDate}
+                />}
+            />
+
+
+
+        </View>
+    )
+}
+
+
+
+OrdersScreen.navigationOptions = navData => {
+    return {
+        headerTitle: "Twoje zamówienie",
+        headerLeft: (
+            <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+                <Item
+                    title="Cart"
+                    iconName="md-menu"
+                    onPress={() => { navData.navigation.toggleDrawer() }}
+                />
+            </HeaderButtons>
+        ),
+    }
+}
+
+const styles = StyleSheet.create({
+
+    screen: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+
+
+
+    },
+    text: {
+        fontSize: 22,
+        fontFamily: 'open-sans-bold'
+
+    }
+})
+

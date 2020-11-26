@@ -6,6 +6,6 @@
 // }
 
 export default{
-    primary:"#C29995",
+    primary:"orange",
     secondary:"#ffc107"
 }
