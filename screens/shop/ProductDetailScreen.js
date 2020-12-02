@@ -17,7 +17,7 @@ export default function ProductDetailScreen(props) {
 
     return (
         <ScrollView style={styles.container}>
-            <Image style={styles.image} source={{ uri: selectedProduct.imageUrl }} />
+            <Image  style={styles.image} source={{ uri: selectedProduct.imageUrl }} />
             <View style={styles.action}>
                 <Button
                     color={Colors.primary}
