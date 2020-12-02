@@ -72,12 +72,10 @@ export default function EditProductScreen(props) {
                 }
                 let updatedFormIsValid = true
 
-                console.log(formIsValid)
 
                 for (const key in updatedValidities) {
                     updatedFormIsValid = updatedFormIsValid && updatedValidities[key]
 
-                    console.log(formIsValid)
                 }
                 return {
                     inputValues: updatedValues,
