@@ -6,6 +6,8 @@
 // }
 
 export default{
-    primary:"orange",
-    secondary:"#ffc107"
+    primary:"#BC35B2",
+    secondary:"#ffc707",
+    third: "#AC33C8",
+
 }

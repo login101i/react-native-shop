@@ -9,6 +9,45 @@ import { useSelector, useDispatch } from 'react-redux'
 import * as productActions from '../../store/actions/products'
 import Input from '../../components/shop/UI/Input'
 
+
+
+
+
+
+// ______________________________________________________________
+const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE'
+
+const formReducer = (state, action) => {
+    if (action.type === FORM_INPUT_UPDATE) {
+        const updatedValues = {
+            ...state.inputValues,
+            [action.input]: action.value
+
+        }
+        const updatedValidities = {
+            ...state.inputValidities,
+            [action.input]: action.isValid
+        }
+        let updatedFormIsValid = true
+        console.log("To jest to czego szukam= " + updatedFormIsValid)
+
+
+        for (const key in updatedValidities) {
+            updatedFormIsValid = updatedFormIsValid && updatedValidities[key]
+            console.log("To jest to cz ego szukam= " + updatedFormIsValid)
+
+        }
+        return {
+            inputValues: updatedValues,
+            inputValidities: updatedValidities,
+            formIsValid: updatedFormIsValid
+        }
+    }
+    return state
+}
+// ______________________________________________________________
+
+
 export default function EditProductScreen(props) {
 
     const productId = props.navigation.getParam('productId')
@@ -19,7 +58,35 @@ export default function EditProductScreen(props) {
 
     const dispatch = useDispatch()
 
+
+    // ______________________________________________________________
+
+
+    const [formState, dispatchFormState] = useReducer(formReducer, {
+        inputValues: {
+            title: editedProduct ? editedProduct.title : '',
+            imageUrl: editedProduct ? editedProduct.imageUrl : '',
+            description: editedProduct ? editedProduct.description : '',
+            price: '',
+        },
+        inputValidities: {
+            title: editedProduct ? true : false,
+            imageUrl: editedProduct ? true : false,
+            description: editedProduct ? true : false,
+            price: editedProduct ? true : false,
+        },
+        formIsValid: editedProduct ? true : false
+
+    },
+
+    )
+
+    // ______________________________________________________________
+
+
+
     const submitHandler = useCallback(() => {
+        console.log("---------------" + formState.formIsValid)
         if (!formState.formIsValid) {
             Alert.alert('Niepoprawna wartość', "Proszę poprawnie wypełnić formularz", [
                 { text: 'OK' },
@@ -38,6 +105,8 @@ export default function EditProductScreen(props) {
             ))
 
         } else {
+            console.log("Tworzę produkt")
+            console.log(formState.inputValues.title)
             dispatch(productActions.createProduct(
                 formState.inputValues.title,
                 formState.inputValues.description,
@@ -46,63 +115,21 @@ export default function EditProductScreen(props) {
             ))
         }
         props.navigation.goBack()
-    }, [dispatch, formState])
+    }, [dispatch, productId, formState])
 
-
+    // 
     useEffect(() => {
         props.navigation.setParams({ 'submit': submitHandler })
     }, [submitHandler])
 
 
 
-    // ______________________________________________________________
-    const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE'
-
-    const formReducer = (state, action) => {
-        switch (action.type) {
-            case FORM_INPUT_UPDATE:
-                const updatedValues = {
-                    ...state.inputValues,
-                    [action.input]: action.value
-
-                }
-                const updatedValidities = {
-                    ...state.inputValidities,
-                    [action.input]: action.isValid
-                }
-                let updatedFormIsValid = true
-
-
-                for (const key in updatedValidities) {
-                    updatedFormIsValid = updatedFormIsValid && updatedValidities[key]
-
-                }
-                return {
-                    inputValues: updatedValues,
-                    inputValidities: updatedValidities,
-                    formIsValid: updatedFormIsValid
-                }
-        }
-        return state
-    }
-
-    const [formState, dispatchFormState] = useReducer(formReducer, {
-        inputValues: {
-            title: editedProduct ? editedProduct : '',
-            imageUrl: editedProduct ? editedProduct : '',
-            description: editedProduct ? editedProduct : '',
-            price: '',
-        },
-        inputValidities: {
-            title: editedProduct ? true : false,
-            imageUrl: editedProduct ? true : false,
-            description: editedProduct ? true : false,
-            price: editedProduct ? true : false,
-        },
-        formIsValid: editedProduct ? true : false
-    })
 
     const inputChangeHandler = useCallback((inputIdentifier, inputValue, inputValidity) => {
+        // console.log("InputIdentifier= " + inputIdentifier)
+        // console.log("inputValue= " + inputValue)
+        // console.log("inputValidity= " + inputValidity)
+
 
         dispatchFormState({
             type: FORM_INPUT_UPDATE,
@@ -122,8 +149,8 @@ export default function EditProductScreen(props) {
             <ScrollView>
                 <View style={styles.form}>
                     <Input
-                        id='title'
-                        label="Tytuł"
+                        id="title"
+                        label="tytuł"
                         errorText="Niepoprawna wartość"
                         keyboardType="default"
                         autoCapitalize="sentences"
@@ -131,12 +158,12 @@ export default function EditProductScreen(props) {
                         returnKeyType="next"
                         onInputChange={inputChangeHandler}
                         initialValue={editedProduct ? editedProduct.title : ''}
-                        initiallyValid={!!editedProduct}
+                        initiallyValid={editedProduct ? true : false}
                         required
                     />
                     <Input
                         id="imageUrl"
-                        label="URL obrazu"
+                        label="Link do obrazka"
                         errorText="Niepoprawna wartość URL"
                         keyboardType="default"
                         autoCapitalize="sentences"
@@ -144,7 +171,7 @@ export default function EditProductScreen(props) {
                         returnKeyType="next"
                         onInputChange={inputChangeHandler}
                         initialValue={editedProduct ? editedProduct.imageUrl : ''}
-                        initiallyValid={!!editedProduct}
+                        initiallyValid={editedProduct ? true : false}
                         required
 
                     />
@@ -157,6 +184,7 @@ export default function EditProductScreen(props) {
                             returnKeyType="next"
                             onInputChange={inputChangeHandler}
                             required
+                            min={2}
 
 
 
@@ -165,8 +193,8 @@ export default function EditProductScreen(props) {
 
                     <Input
                         id="description"
-                        label="Opis produktu"
-                        errorText="Proszę określić opis."
+                        label="description"
+                        errorText="Proszę podać minimum 10 znaków."
                         keyboardType="default"
                         autoCapitalize="sentences"
                         autoCorrect
@@ -176,6 +204,7 @@ export default function EditProductScreen(props) {
                         initialValue={editedProduct ? editedProduct.description : ''}
                         initiallyValid={!!editedProduct}
                         required
+                        minLength={10}
 
 
                     />

@@ -10,7 +10,7 @@ const inputReducer = (state, action) => {
             return {
                 ...state,
                 value: action.value,
-                isValid: action.isValid
+                isValid: action.isValidForSure
             }
         case INPUT_BLUR:
             return {
@@ -41,6 +41,9 @@ export default function Input(props) {
     useEffect(() => {
         if (inputState.touched) {
             onInputChange(id, inputState.value, inputState.isValid)
+            console.log("hihi")
+            console.log(inputState.value)
+            console.log(" to jest isValid ze stanu:" + inputState.isValid)
         }
     }, [inputState, onInputChange, id])
 
@@ -63,13 +66,14 @@ export default function Input(props) {
         if (props.minLength != null && text.length < props.minLength) {
             isValid = false
         }
+        console.log(" to jest isValid:" + isValid)
         dispatch({
             type: INPUT_CHANGE,
             value: text,
-            isValid: isValid,
+            isValidForSure: isValid,
+
 
         })
-        // console.log(isValid)
     }
 
     const lostFocusHandler = () => {

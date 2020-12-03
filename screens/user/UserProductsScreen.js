@@ -18,6 +18,13 @@ export default function UserProductsScreen(props) {
         props.navigation.navigate('EditProduct', { productId: id })
     }
 
+    const onDetailHandler = (id, title) => {
+        props.navigation.navigate("ProductDetail", {
+            productId: id,
+            ProductTitle: title
+        })
+    }
+
 
     const deleteHandler = (id) => {
         Alert.alert('Na pewno?', "Czy na pewno chcesz usunąć ten element?", [
@@ -39,7 +46,7 @@ export default function UserProductsScreen(props) {
                 image={itemData.item.imageUrl}
                 title={itemData.item.title}
                 price={itemData.item.price}
-                onSelect={() => { editProductHandler(itemData.item.id) }}
+                onSelect={() => { onDetailHandler(itemData.item.id, itemData.item.title) }}
             >
                 <Button
                     color={Colors.primary}

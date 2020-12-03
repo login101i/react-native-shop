@@ -7,6 +7,7 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import ProductItem from '../../components/shop/ProductItem'
 import * as cartActions from '../../store/actions/cart'
 import CustomHeaderButton from '../../components/shop/UI/CustomHeaderButton'
+import Colors from '../../constants/Colors'
 
 
 
@@ -44,10 +45,12 @@ export default function ProductsOverviewScreen(props) {
                     >
                         <Button
                             title='Szczegóły'
+                            color={Colors.third}
                             onPress={() => { onDetailHandler(itemData.item.id, itemData.item.title) }}
                         />
                         <Button
                             title='Do koszyka'
+                            color={Colors.third}
                             onPress={()=>onAddToCartHandler(itemData.item)}
                         />
                     </ProductItem>

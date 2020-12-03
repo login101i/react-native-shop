@@ -36,13 +36,13 @@ export default (state = initialState, action) => {
             const productIndex = state.userProducts.findIndex(prod => prod.id === action.pid)
             const updatedProduct = new Product(
                 action.pid,
-                state.userProducts[productIndex].ownerID,
+                state.userProducts[productIndex].ownerId,
                 action.productData.title,
                 action.productData.imageUrl,
                 action.productData.description,
                 state.userProducts[productIndex].price
-,
             )
+
             const updatedUserProducts = [...state.userProducts]
             updatedUserProducts[productIndex] = updatedProduct
             const availableProductIndex = state.availableProducts.findIndex(prod => prod.id === action.pid)
