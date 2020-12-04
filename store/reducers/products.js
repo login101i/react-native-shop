@@ -2,7 +2,7 @@
 
 import PRODUCTS from '../../data/dummy-data'
 import Product from '../../models/product'
-import { DELETE_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT } from '../actions/products';
+import { DELETE_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, SET_PRODUCTS } from '../actions/products';
 
 const initialState = {
     availableProducts: PRODUCTS,
@@ -12,15 +12,22 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch (action.type) {
+        case SET_PRODUCTS:
+            const fetchedProducts = action.products
+            return {
+                ...state,
+                availableProducts: fetchedProducts,
+                userProducts: fetchedProducts.filter(item => item.ownerId === 'u1')
+            }
         case DELETE_PRODUCT:
             return {
                 ...state,
-                userProducts: state.userProducts.filter(product=>product.id!==action.pid),
-                availableProducts: state.availableProducts.filter(product=>product.id!==action.pid)
+                userProducts: state.userProducts.filter(product => product.id !== action.pid),
+                availableProducts: state.availableProducts.filter(product => product.id !== action.pid)
             }
-         case CREATE_PRODUCT:
+        case CREATE_PRODUCT:
             const newProduct = new Product(
-                new Date().toString(),
+                action.productData.id,
                 'u1',
                 action.productData.title,
                 action.productData.imageUrl,
@@ -41,8 +48,8 @@ export default (state = initialState, action) => {
                 action.productData.imageUrl,
                 action.productData.description,
                 state.userProducts[productIndex].price
+,
             )
-
             const updatedUserProducts = [...state.userProducts]
             updatedUserProducts[productIndex] = updatedProduct
             const availableProductIndex = state.availableProducts.findIndex(prod => prod.id === action.pid)

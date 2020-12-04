@@ -37,6 +37,14 @@ export default function UserProductsScreen(props) {
         ])
     }
 
+    if (userProducts.length === 0) {
+        return (
+            <View style={styles.textEmpty} >
+                <Text style={{ color: Colors.third, fontSize: 23 }}>Brak produktów.</Text>
+            </View>
+        )
+    }
+
 
     return (
         <FlatList
@@ -90,7 +98,14 @@ UserProductsScreen.navigationOptions = navData => {
 
 
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    textEmpty: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+
+    }
+})
 
 
 // import React from 'react'

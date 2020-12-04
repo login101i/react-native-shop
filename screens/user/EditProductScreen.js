@@ -1,13 +1,14 @@
 
 
 
-import React, { useEffect, useCallback, useReducer } from 'react'
-import { StyleSheet, Text, View, TextInput, ScrollView, Alert, KeyboardAvoidingView } from 'react-native'
+import React, { useState, useEffect, useCallback, useReducer } from 'react'
+import { StyleSheet, Text, View, TextInput, ScrollView, Alert, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
 import CustomHeaderButton from '../../components/shop/UI/CustomHeaderButton'
 import { HeaderButtons, Icon, Item } from 'react-navigation-header-buttons'
 import { useSelector, useDispatch } from 'react-redux'
 import * as productActions from '../../store/actions/products'
 import Input from '../../components/shop/UI/Input'
+import { Colors } from 'react-native/Libraries/NewAppScreen'
 
 
 
@@ -49,6 +50,9 @@ const formReducer = (state, action) => {
 
 
 export default function EditProductScreen(props) {
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState()
+
 
     const productId = props.navigation.getParam('productId')
     const editedProduct = useSelector(state => state.products.userProducts.find(item => item.id === productId))
@@ -84,8 +88,10 @@ export default function EditProductScreen(props) {
     // ______________________________________________________________
 
 
+    // ______________________________________________________________
 
-    const submitHandler = useCallback(() => {
+    const submitHandler = useCallback(async () => {
+
         console.log("---------------" + formState.formIsValid)
         if (!formState.formIsValid) {
             Alert.alert('Niepoprawna wartość', "Proszę poprawnie wypełnić formularz", [
@@ -95,29 +101,51 @@ export default function EditProductScreen(props) {
 
             return
         }
-        if (editedProduct) {
-            dispatch(productActions.updateProduct(
-                productId,
-                formState.inputValues.title,
-                formState.inputValues.description,
-                formState.inputValues.imageUrl,
 
-            ))
+        // __________________-
+        setError(null)
+        setIsLoading(true)
+        // ________________
+        try {
+            if (editedProduct) {
+                await dispatch(productActions.updateProduct(
+                    productId,
+                    formState.inputValues.title,
+                    formState.inputValues.description,
+                    formState.inputValues.imageUrl,
 
-        } else {
-            console.log("Tworzę produkt")
-            console.log(formState.inputValues.title)
-            dispatch(productActions.createProduct(
-                formState.inputValues.title,
-                formState.inputValues.description,
-                formState.inputValues.imageUrl,
-                +formState.inputValues.price,
-            ))
+                ))
+
+            } else {
+                console.log("Tworzę produkt")
+                console.log(formState.inputValues.title)
+                await dispatch(productActions.createProduct(
+                    formState.inputValues.title,
+                    formState.inputValues.description,
+                    formState.inputValues.imageUrl,
+                    +formState.inputValues.price,
+                ))
+            }
+            props.navigation.goBack()
+
+        } catch (err) {
+            setError(err.message)
         }
-        props.navigation.goBack()
+
+        setIsLoading(false)
     }, [dispatch, productId, formState])
 
-    // 
+    useEffect(() => {
+        if (error) {
+            Alert.alert('Powstał błąd przy aktualizacji/tworzeniu produkut', error, [{
+                text: 'okey'
+            }])
+        }
+    }, [error])
+
+
+
+    // _____
     useEffect(() => {
         props.navigation.setParams({ 'submit': submitHandler })
     }, [submitHandler])
@@ -138,6 +166,16 @@ export default function EditProductScreen(props) {
             input: inputIdentifier
         })
     }, [dispatchFormState])
+
+    // _____________________________________________
+    if (isLoading) {
+        return (
+            <View style={styles.indicator}>
+                <ActivityIndicator size="small" color={Colors.primary} />
+            </View>
+
+        )
+    }
 
     // _____________________________________________
     return (
@@ -184,7 +222,7 @@ export default function EditProductScreen(props) {
                             returnKeyType="next"
                             onInputChange={inputChangeHandler}
                             required
-                            min={2}
+                            min={0.1}
 
 
 
@@ -237,5 +275,10 @@ const styles = StyleSheet.create({
     form: {
         margin: 22,
     },
+    indicator: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 
 })

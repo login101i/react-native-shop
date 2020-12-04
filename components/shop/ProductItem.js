@@ -103,7 +103,7 @@ export default function ProductItem(props) {
                     />
                     <View style={{...styles.details,...props.style}}>
                         <Text style={styles.title}>{props.title}</Text>
-                        <Text style={styles.text}>{props.price.toFixed()} zł</Text>
+                        <Text style={styles.text}>{props.price} zł</Text>
                     </View>
                     <View style={styles.action}>
                       {props.children}

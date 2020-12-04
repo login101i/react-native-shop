@@ -1,7 +1,7 @@
 
 
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, Button, FlatList } from 'react-native'
+import { StyleSheet, Text, View, Button, FlatList, ActivityIndicator } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import Card from '../../components/shop/UI/Card'
 import Colors from '../../constants/Colors'
@@ -12,6 +12,10 @@ import * as orderActions from '../../store/actions/orders'
 
 
 export default function CartScreen(props) {
+    const [isLoading, setIsLoading] = useState(false)
+
+
+
     const cartTotalAmount = useSelector(state => state.cart.totalAmount)
     console.log(cartTotalAmount)
 
@@ -32,17 +36,37 @@ export default function CartScreen(props) {
 
     const dispatch = useDispatch()
 
+    const sendOrderHandler = async () => {
+        setIsLoading(true)
+        await dispatch(orderActions.addOrder(cartItems, cartTotalAmount))
+        setIsLoading(false)
+    }
+    // ______________________________
+
+
+
+
 
     return (
         <Card style={styles.screen}>
             <View style={styles.summary}>
 
                 <Text>Razem:</Text>
-                <Text>{Math.round(cartTotalAmount.toFixed(2)*100)/100} zł</Text>
-                <Button
-                 title="zamów teraz" color={Colors.primary} disabled={cartTotalAmount === 0} 
-                 onPress={()=>{dispatch(orderActions.addOrder(cartItems,cartTotalAmount))}}
-                 />
+                <Text>{Math.round(cartTotalAmount.toFixed(2) * 100) / 100} zł</Text>
+
+
+                {isLoading ? (
+                  
+                        <ActivityIndicator size="large" color={Colors.primary} />
+                 
+                ) : (
+                        <Button
+                            title="zamów teraz" color={Colors.primary} disabled={cartTotalAmount === 0}
+                            onPress={sendOrderHandler}
+                        />
+                    )}
+
+
             </View>
             <FlatList
                 data={cartItems}
@@ -53,7 +77,7 @@ export default function CartScreen(props) {
                     amount={itemData.item.sum}
                     showIcon
                     onRemove={() => { dispatch(cartItemsActions.deleteFromCart(itemData.item.productId)) }}
-                    onAddOne={() => { dispatch(cartItemsActions.addOneToCart(itemData.item.productId))}}
+                    onAddOne={() => { dispatch(cartItemsActions.addOneToCart(itemData.item.productId)) }}
                 />}
             />
         </Card>
