@@ -4,6 +4,8 @@ import React from 'react'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createDrawerNavigator } from 'react-navigation-drawer'
+// import { createAnimatedSwitchNavigator} from 'react-navigation-animated-switch-navigator'
+import { createSwitchNavigator } from 'react-navigation'
 import { Ionicons } from '@expo/vector-icons'
 
 
@@ -17,6 +19,7 @@ import OrdersScreen from '../screens/shop/OrdersScreen'
 import CartScreen from '../screens/shop/CartScreen'
 import UserProductsScreen from '../screens/user/UserProductsScreen'
 import EditProductScreen from '../screens/user/EditProductScreen'
+import AuthScreen from '../screens/shop/AuthScreen'
 import Colors from '../constants/Colors'
 
 
@@ -102,10 +105,10 @@ const SidebarNavigator = createDrawerNavigator({
             drawerLabel: 'Twoje zamówienie'
         }
     },
-    Admin:{
-        screen:AdminNavigator,
-        navigationOptions:{
-            drawerLabel:'Admin'
+    Admin: {
+        screen: AdminNavigator,
+        navigationOptions: {
+            drawerLabel: 'Admin'
         }
     }
 }, {
@@ -115,6 +118,19 @@ const SidebarNavigator = createDrawerNavigator({
 })
 // _______________________________________________
 
+const AuthNavigator = createStackNavigator({
+    Auth: AuthScreen
+
+}, {
+    defaultNavigationOptions: defaultOptions
+})
 
 // _______________________________________________
-export default createAppContainer(SidebarNavigator)
+
+const MainNavigator = createSwitchNavigator({
+    Auth: AuthNavigator,
+    Shop: SidebarNavigator
+})
+
+// _______________________________________________
+export default createAppContainer(MainNavigator)

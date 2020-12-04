@@ -54,7 +54,7 @@ export default function Input(props) {
         if (props.required && text.trim().length === 0) {
             isValid = false
         }
-        if (props.email && !emailRegex.text(text.toLowerCase())) {
+        if (props.email && !emailRegex.test(text.toLowerCase())) {
             isValid = false
         }
         if (props.min != null && +text < props.min) {
@@ -93,15 +93,11 @@ export default function Input(props) {
             />
             {!inputState.isValid && inputState.touched && (
                 <View style={styles.errorContainer}>
-
                     <Text style={styles.errorText}>{props.errorText}
                     </Text>
-
                 </View>
             )
-
             }
-
         </View>
     )
 }

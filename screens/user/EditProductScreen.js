@@ -153,7 +153,9 @@ export default function EditProductScreen(props) {
 
 
 
-    const inputChangeHandler = useCallback((inputIdentifier, inputValue, inputValidity) => {
+    const inputChangeHandler = useCallback(
+        
+        (inputIdentifier, inputValue, inputValidity) => {
         // console.log("InputIdentifier= " + inputIdentifier)
         // console.log("inputValue= " + inputValue)
         // console.log("inputValidity= " + inputValidity)
