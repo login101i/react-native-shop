@@ -8,11 +8,13 @@ import Colors from '../../constants/Colors'
 import CartItem from '../../components/shop/CartItem'
 import * as cartItemsActions from '../../store/actions/cart'
 import * as orderActions from '../../store/actions/orders'
+import orders from '../../store/reducers/orders'
 
 
 
 export default function CartScreen(props) {
     const [isLoading, setIsLoading] = useState(false)
+    const [error, setIsError] = useState()
 
 
 
@@ -37,51 +39,80 @@ export default function CartScreen(props) {
     const dispatch = useDispatch()
 
     const sendOrderHandler = async () => {
-        setIsLoading(true)
-        await dispatch(orderActions.addOrder(cartItems, cartTotalAmount))
-        setIsLoading(false)
+        try {
+            setIsLoading(true)
+
+            await dispatch(orderActions.addOrder(cartItems, cartTotalAmount))
+            setIsLoading(false)
+
+        } catch (err) {
+            setIsError(err.message)
+
+
+        }
     }
     // ______________________________
 
-
+    if (error) {
+        return (
+            <View>
+                <Text>{error}</Text>
+            </View>
+        )
+    }
 
 
 
     return (
-        <Card style={styles.screen}>
-            <View style={styles.summary}>
+        <>
+            <Card style={styles.screen}>
+                <View style={styles.summary}>
 
-                <Text>Razem:</Text>
-                <Text>{Math.round(cartTotalAmount.toFixed(2) * 100) / 100} zł</Text>
+                    <Text>Razem:</Text>
+                    <Text>{Math.round(cartTotalAmount * 100) / 100} zł</Text>
 
 
-                {isLoading ? (
-                  
+                    {isLoading ? (
+
                         <ActivityIndicator size="large" color={Colors.primary} />
-                 
-                ) : (
-                        <Button
-                            title="zamów teraz" color={Colors.primary} disabled={cartTotalAmount === 0}
-                            onPress={sendOrderHandler}
-                        />
-                    )}
+
+                    ) : (
+                            <Button
+                                title="zamów teraz" color={Colors.primary} disabled={cartTotalAmount === 0}
+                                onPress={sendOrderHandler}
+                            />
+                        )}
 
 
-            </View>
-            <FlatList
-                data={cartItems}
-                keyExtractor={item => item.productId}
-                renderItem={itemData => <CartItem
-                    qty={itemData.item.quantity}
-                    title={itemData.item.productTitle}
-                    amount={itemData.item.sum}
-                    showIcon
-                    onRemove={() => { dispatch(cartItemsActions.deleteFromCart(itemData.item.productId)) }}
-                    onAddOne={() => { dispatch(cartItemsActions.addOneToCart(itemData.item.productId)) }}
+                </View>
+                <FlatList
+                    data={cartItems}
+                    keyExtractor={item => item.productId}
+                    renderItem={itemData => <CartItem
+                        qty={itemData.item.quantity}
+                        title={itemData.item.productTitle}
+                        amount={itemData.item.sum}
+                        showIcon
+                        onRemove={() => { dispatch(cartItemsActions.deleteFromCart(itemData.item.productId)) }}
+                        onAddOne={() => { dispatch(cartItemsActions.addOneToCart(itemData.item.productId)) }}
+                    />}
+                />
+            </Card>
+            <Card>
+                {cartItems.length === 0 ? null : <Button
+                    title="wyczyść koszyk"
+                    color={Colors.third}
+                    onPress={() => { dispatch(cartItemsActions.clearCart()) }}
                 />}
-            />
-        </Card>
+            </Card>
+        </>
     )
+}
+
+CartScreen.navigationOptions = navData => {
+    return {
+        headerTitle: 'Koszyk',
+    }
 }
 
 const styles = StyleSheet.create({

@@ -12,13 +12,16 @@ import ReduxThunk from 'redux-thunk'
 import productReducer from './store/reducers/products'
 import cartReducer from './store/reducers/cart'
 import orderReducer from './store/reducers/orders'
+import authReducer from './store/reducers/auth'
 import ProductsOverviewScreen from './screens/shop/ProductsOverviewScreen'
 import ShopNavigator from './navigation/ShopNavigator'
+import NavigationContainer from './navigation/NavigationContainer'
 
 const rootReducer = combineReducers({
   products: productReducer,
   cart:cartReducer,
-  orders:orderReducer
+  orders:orderReducer,
+  auth:authReducer
 })
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk))
@@ -43,7 +46,8 @@ export default function App() {
 
  return(
     <Provider store={store}>
-      <ShopNavigator />
+      <NavigationContainer />
+      {/* robimy tak aby mieć dostęp do redux w Navigatorcontainer  */}
     </Provider>
  )
 }

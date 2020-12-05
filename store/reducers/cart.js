@@ -1,6 +1,6 @@
 
 
-import { ADD_TO_CART, DELETE_FROM_CART, ADD_ONE_TO_CART } from '../actions/cart'
+import { ADD_TO_CART, DELETE_FROM_CART, ADD_ONE_TO_CART, CLEAR_CART } from '../actions/cart'
 import { DELETE_PRODUCT } from '../actions/products'
 import { ADD_ORDER } from '../actions/orders'
 import CartItem from '../../models/cartItem'
@@ -16,7 +16,7 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case ADD_TO_CART:
             const addedProduct = action.product;
-            const productPrice = addedProduct.price;
+            const productPrice = parseInt(addedProduct.price);
             const productTitle = addedProduct.title;
 
             let newOrUpdatedCartItem
@@ -82,15 +82,17 @@ export default (state = initialState, action) => {
             if (!state.items[action.pid]) {
                 return state
             }
-            const itemTotal=state.items[action.pid].sum
+            const itemTotal = state.items[action.pid].sum
             const updatedItems = { ...state.items }
             delete updatedItems[action.pid]
 
             return {
                 ...state,
                 items: updatedItems,
-                totalAmount:state.totalamount-itemTotal
+                totalAmount: state.totalamount - itemTotal
             }
+        case CLEAR_CART:
+            return initialState
 
 
 

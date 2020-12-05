@@ -8,8 +8,9 @@ import Product from '../../models/product'
 
 
 export const fetchProducts = () => {
-    return async dispatch => {
+    return async (dispatch, getState) => {
         // tutaj tworzę sobie asynchroniczny kod jaki tylko chcę
+        const userId = getState().auth.userId
         try {
             const response = await fetch("https://shop-app-mckrus-default-rtdb.firebaseio.com/products.json")
 
@@ -23,14 +24,18 @@ export const fetchProducts = () => {
             for (const key in resData) {
                 loadedProducts.push(new Product(
                     key,
-                    'u1',
+                    resData[key].ownerId,
                     resData[key].title,
                     resData[key].imageUrl,
                     resData[key].description,
                     resData[key].price
                 ))
             }
-            dispatch({ type: SET_PRODUCTS, products: loadedProducts })
+            dispatch({
+                type: SET_PRODUCTS,
+                products: loadedProducts,
+                userProducts: loadedProducts.filter(prod => prod.ownerId === userId)
+            })
         } catch (err) {
             throw err
         }
@@ -39,8 +44,9 @@ export const fetchProducts = () => {
 }
 
 export const deleteProduct = (productId) => {
-    return async dispatch => {
-        const result = await fetch(`https://shop-app-mckrus-default-rtdb.firebaseio.com/products/${productId}.json`,
+    return async (dispatch, getState) => {
+        const token = getState().auth.token
+        const result = await fetch(`https://shop-app-mckrus-default-rtdb.firebaseio.com/products/${productId}.json?auth=${token}`,
             {
                 method: 'DELETE',
             })
@@ -57,8 +63,10 @@ export const deleteProduct = (productId) => {
     }
 }
 export const updateProduct = (id, title, description, imageUrl) => {
-    return async dispach => {
-        const result = await fetch(`https://shop-app-mckrus-default-rtdb.firebaseio.com/products/${id}.json`, {
+    return async (dispach, getState) => {
+        const token = getState().auth.token
+
+        const result = await fetch(`https://shop-app-mckrus-default-rtdb.firebaseio.com/products/${id}.json?auth=${token}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'aplication/json'
@@ -87,9 +95,13 @@ export const updateProduct = (id, title, description, imageUrl) => {
 
 }
 export const createProduct = (title, description, imageUrl, price) => {
-    return async dispatch => {
+    return async (dispatch, getState) => {
+
+        const token = getState().auth.token
+        const userId = getState().auth.userId
+
         // tutaj tworzę sobie asynchroniczny kod jaki tylko chcę
-        const response = await fetch("https://shop-app-mckrus-default-rtdb.firebaseio.com/products.json", {
+        const response = await fetch(`https://shop-app-mckrus-default-rtdb.firebaseio.com/products.json?auth=${token}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'aplication/json'
@@ -99,7 +111,8 @@ export const createProduct = (title, description, imageUrl, price) => {
                 title,
                 description,
                 imageUrl,
-                price
+                price,
+                ownerId: userId
             })
         })
 
@@ -114,7 +127,8 @@ export const createProduct = (title, description, imageUrl, price) => {
                 title,
                 description,
                 imageUrl,
-                price
+                price,
+                ownerId: userId
 
             }
         })

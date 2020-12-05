@@ -1,5 +1,5 @@
-import React, { useReducer, useCallback } from 'react'
-import { StyleSheet, Text, View, KeyboardAvoidingView, Button } from 'react-native'
+import React, { useState, useReducer, useCallback, useEffect } from 'react'
+import { StyleSheet, Text, View, KeyboardAvoidingView, Button, ActivityIndicator, Alert } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 
 import Input from '../../components/shop/UI/Input'
@@ -43,6 +43,9 @@ const formReducer = (state, action) => {
 }
 
 export default function AuthScreen(props) {
+    const [isSignup, setIsSignup] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState()
 
     const dispatch = useDispatch()
 
@@ -65,14 +68,55 @@ export default function AuthScreen(props) {
 
     },
     )
+    // _____________ error message________________________
+
+    useEffect(() => {
+        if (error) {
+            Alert.alert("Wystąpił błąd", error, [{
+                text: 'ok'
+            }])
+        }
+    }, [error])
+
+
+    // _____________________________________
+
 
     // ______________________________________________________________
     console.log('To moje dane: ' + formState.inputValues.email, formState.inputValues.password)
-    const signupHandler = () => {
-        dispatch
-            (authActions.signup(
-                formState.inputValues.email,
-                formState.inputValues.password))
+    const authHandler = async () => {
+        // if (formState.inputValues.password.length===0) {
+        //     setError(true)
+        //     console.log("jest błąd")
+        // }
+        if (isSignup) {
+            setError(null)
+            setIsLoading(true)
+            try {
+                await dispatch
+                    (authActions.signup(
+                        formState.inputValues.email,
+                        formState.inputValues.password))
+            } catch (err) {
+                setError(err.message)
+            }
+            setIsLoading(false)
+        } else {
+            setError(null)
+            setIsLoading(true)
+            try {
+                await dispatch
+                    (authActions.signin(
+                        formState.inputValues.email,
+                        formState.inputValues.password))
+                props.navigation.navigate('Shop')
+
+            } catch (err) {
+                setError(err.message)
+            }
+            setIsLoading(false)
+        }
+
     }
     // _____________________________________
     const inputChangeHandler = useCallback((inputIdentifier, inputValue, inputValidity) => {
@@ -86,6 +130,10 @@ export default function AuthScreen(props) {
 
     }, [dispatchFormState])
     // _____________________________________
+
+
+    // _____________________________________
+
 
 
     return (
@@ -124,18 +172,18 @@ export default function AuthScreen(props) {
                         </View>
                         <View style={{ marginVertical: 21 }}
                         >
-                            <Button
-                                title="zaloguj się"
+                            {isLoading ? <ActivityIndicator size="small" color="green" /> : <Button
+                                title={isSignup ? "Zarejestruj się" : "Zaloguj się"}
                                 color={Colors.third}
-                                onPress={signupHandler}
+                                onPress={authHandler}
                             />
+                            }
                         </View>
                         <View>
                             <Button
-                                title="Zarejestruj się"
+                                title={`Przełącz na ${isSignup ? "logowanie" : "rejestrację"}`}
                                 color={Colors.third}
-                            // onPress={signupHandler}
-
+                                onPress={() => { setIsSignup(prevState => !prevState) }}
                             />
                         </View>
 

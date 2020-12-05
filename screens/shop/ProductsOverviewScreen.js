@@ -66,22 +66,7 @@ export default function ProductsOverviewScreen(props) {
 
         dispatch(cartActions.addToCart(item))
     }
-    if (error) {
-        return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Coś poszło nie tak po stronie serwera.</Text>
-                <View style={{ marginTop: 22 }}>
-                    <Button
-                        color={Colors.third}
-                        title="Spróbuj ponownie"
-                        onPress={loadProducts}
-                    />
 
-                </View>
-
-            </View>
-        )
-    }
 
     if (isLoading) {
         return (
@@ -95,6 +80,22 @@ export default function ProductsOverviewScreen(props) {
         return (
             <View style={styles.textEmpty} >
                 <Text style={{ color: Colors.third, fontSize: 23 }}>Brak produktów.</Text>
+
+            </View>
+        )
+    }
+
+    if (error) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text>Coś poszło nie tak po stronie serwera.</Text>
+                <View style={{ marginTop: 22 }}>
+                    <Button
+                        color={Colors.third}
+                        title="Spróbuj ponownie"
+                    />
+
+                </View>
 
             </View>
         )

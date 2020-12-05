@@ -12,7 +12,7 @@ export default function CartItem(props) {
                 > {props.title}</Text>
             </Text>
             <View style={styles.razem}>
-                <Text style={styles.mainText}>  {props.amount.toFixed(2)}  </Text>
+                <Text style={styles.mainText}>  {props.amount}  </Text>
                 {props.showIcon &&<TouchableOpacity onPress={props.onRemove} style={styles.deleteButton}>
                     <Ionicons
                         name="md-trash"

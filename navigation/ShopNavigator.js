@@ -1,16 +1,15 @@
 
 
 import React from 'react'
+import { Platform, SafeAreaView, Button, View } from 'react-native'
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack'
-import { createDrawerNavigator } from 'react-navigation-drawer'
+import { createDrawerNavigator, DrawerNavigatorItems } from 'react-navigation-drawer'
 // import { createAnimatedSwitchNavigator} from 'react-navigation-animated-switch-navigator'
 import { createSwitchNavigator } from 'react-navigation'
 import { Ionicons } from '@expo/vector-icons'
+import { useDispatch } from 'react-redux'
 
-
-
-import { Platform } from 'react-native'
 
 
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen'
@@ -20,7 +19,10 @@ import CartScreen from '../screens/shop/CartScreen'
 import UserProductsScreen from '../screens/user/UserProductsScreen'
 import EditProductScreen from '../screens/user/EditProductScreen'
 import AuthScreen from '../screens/shop/AuthScreen'
+import StartUpScreen from '../screens/StartUpScreen'
 import Colors from '../constants/Colors'
+import * as AuthActions from '../store/actions/auth'
+
 
 
 
@@ -114,6 +116,31 @@ const SidebarNavigator = createDrawerNavigator({
 }, {
     contentOptions: {
         activeTintColor: Colors.primary
+    },
+    contentComponent: props => {
+
+        const dispatch = useDispatch()
+        return <View style={{ flex: 1, paddingVertical: 27, alignItems: 'center' }}>
+            <SafeAreaView
+                forceInset={{ top: 'always', horizontal: 'never' }}
+            >
+                <DrawerNavigatorItems  {...props} />
+                <View style={{ width: 244, marginTop: 44 }}>
+                    <Button
+                        title="wyloguj"
+                        color={Colors.third}
+                        onPress={() => {
+                            dispatch(AuthActions.logout())
+                            // props.navigation.navigate('Auth')
+                            // ukrywam tę linię bo po kliknięciu na button resetuję czas i w NavigationContainer samo przenosi mnie na stronę Auth
+                        }}
+                    />
+                </View>
+
+            </SafeAreaView>
+        </View>
+
+
     }
 })
 // _______________________________________________
@@ -128,8 +155,10 @@ const AuthNavigator = createStackNavigator({
 // _______________________________________________
 
 const MainNavigator = createSwitchNavigator({
+    Start: StartUpScreen,
     Auth: AuthNavigator,
-    Shop: SidebarNavigator
+    Shop: SidebarNavigator,
+
 })
 
 // _______________________________________________

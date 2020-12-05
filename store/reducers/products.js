@@ -5,8 +5,8 @@ import Product from '../../models/product'
 import { DELETE_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, SET_PRODUCTS } from '../actions/products';
 
 const initialState = {
-    availableProducts: PRODUCTS,
-    userProducts: PRODUCTS.filter(item => item.ownerId === 'u1')
+    availableProducts:[],
+    userProducts: []
 }
 
 
@@ -17,7 +17,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 availableProducts: fetchedProducts,
-                userProducts: fetchedProducts.filter(item => item.ownerId === 'u1')
+                userProducts:action.userProducts
             }
         case DELETE_PRODUCT:
             return {
@@ -28,7 +28,7 @@ export default (state = initialState, action) => {
         case CREATE_PRODUCT:
             const newProduct = new Product(
                 action.productData.id,
-                'u1',
+                action.productData.ownerId,
                 action.productData.title,
                 action.productData.imageUrl,
                 action.productData.description,
